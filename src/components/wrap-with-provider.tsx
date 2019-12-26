@@ -1,11 +1,14 @@
 import React from 'react';
-import Layout from 'src/layouts';
-import { SwitchContainer } from 'src/store';
+
+import Layout from '../layouts';
+import { FirebaseAuthContainer, SwitchContainer } from '../store';
 
 export const WrapWithProvider = ({ element }: any) => (
-  <SwitchContainer.Provider>
-    <Layout>{element}</Layout>
-  </SwitchContainer.Provider>
+  <FirebaseAuthContainer.Provider>
+    <SwitchContainer.Provider>
+      <Layout>{element}</Layout>
+    </SwitchContainer.Provider>
+  </FirebaseAuthContainer.Provider>
 );
 
 export default WrapWithProvider;
