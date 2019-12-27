@@ -1,0 +1,23 @@
+import 'firebase/auth';
+
+import firebase from 'firebase/app';
+import React from 'react';
+
+import styled from '@emotion/styled';
+
+const GoogleAuthButton: React.FCX = ({ className }) => {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  const onClick = () => {
+    firebase.auth().signInWithPopup(provider);
+  };
+
+  return (
+    <button className={className} onClick={onClick}>
+      Sign in with Google
+    </button>
+  );
+};
+
+export const StyledGoogleAuthButton = styled(GoogleAuthButton)``;
+
+export default StyledGoogleAuthButton;

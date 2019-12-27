@@ -4,4 +4,4 @@ export * from './seo';
 export * from './wrap-root-element';
 export * from './wrap-page-element';
 export * from './form';
-export * from './auth-button';
+export * from './auth-buttons';
