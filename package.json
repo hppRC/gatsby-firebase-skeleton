@@ -53,11 +53,12 @@
   "devDependencies": {},
   "scripts": {
     "build": "gatsby build",
+    "clean": "gatsby clean",
+    "deploy": "firebase deploy --only hosting",
     "develop": "gatsby develop",
     "format": "prettier --write src/**/*.{js,jsx,tsx}",
     "serve": "gatsby serve",
     "start": "yarn develop",
-    "type-check": "tsc --noEmit",
-    "deploy": "firebase deploy --only hosting"
+    "type-check": "tsc --noEmit"
   }
 }
