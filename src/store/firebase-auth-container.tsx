@@ -11,7 +11,7 @@ const useFirebaseAuthContainer = () => {
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        const userName = user.displayName ? user.displayName : 'no name';
+        const userName = user.displayName || 'no name';
         setUser({ uid: user.uid, name: userName });
       } else {
         setUser(null);
