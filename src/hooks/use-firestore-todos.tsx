@@ -28,10 +28,11 @@ export const useFirestoreTodos = (uid: string) => {
       setLoading(true);
       try {
         const snap = await query.get();
-        const todosData = snap.docs.map(doc => ({
+        const todosData: Todo[] = snap.docs.map(doc => ({
           ...(doc.data() as Todo),
           id: doc.id
         }));
+        console.log(todosData);
         setTodos(todosData);
         setError(null);
       } catch (err) {

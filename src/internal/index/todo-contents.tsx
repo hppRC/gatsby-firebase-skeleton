@@ -4,7 +4,7 @@ import { FirebaseAuthContainer } from 'src/store';
 
 import styled from '@emotion/styled';
 
-export const TodoContents: React.FCX = () => {
+export const TodoContents: React.FCX = ({ className }) => {
   const { user } = FirebaseAuthContainer.useContainer();
   if (!user) return <></>;
 
@@ -20,7 +20,7 @@ export const TodoContents: React.FCX = () => {
   };
 
   return (
-    <section>
+    <section className={className}>
       <form onSubmit={onSubmit}>
         <input type='text' ref={ref} />
         <button type='submit'>Add Todo</button>
@@ -28,14 +28,24 @@ export const TodoContents: React.FCX = () => {
       {loading ? (
         <h1>now loading</h1>
       ) : (
-        todos?.map(todo => {
-          console.log(todo);
-        })
+        todos?.map(({ id, text, completed }, i) => (
+          <ul key={i}>
+            <li>{id}</li>
+            <li>{text}</li>
+            <li>{completed ? 'completed' : 'not completed'}</li>
+          </ul>
+        ))
       )}
     </section>
   );
 };
 
-export const StyledTodoContents = styled(TodoContents)``;
+export const StyledTodoContents = styled(TodoContents)`
+  ul {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    list-style: none;
+  }
+`;
 
 export default TodoContents;
