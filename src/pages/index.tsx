@@ -1,14 +1,26 @@
 import React from 'react';
-import { SEO, StyledGoogleAuthButton as GoogleAuthButton } from 'src/components';
+import {
+    SEO, StyledGoogleAuthButton as GoogleAuthButton, StyledSignOutButton as SignOutButton
+} from 'src/components';
+import { StyledTodoContents as TodoContents } from 'src/internal/index/todo-contents';
+import { FirebaseAuthContainer } from 'src/store';
 import baseStyle from 'src/styles/base-style';
 
 import styled from '@emotion/styled';
 
 const Index: React.FCX = ({ className }) => {
+  const { user } = FirebaseAuthContainer.useContainer();
   return (
     <main className={className}>
       <h1>this is index page!</h1>
-      <GoogleAuthButton />
+      {user ? (
+        <>
+          <TodoContents user={user} />
+          <SignOutButton />
+        </>
+      ) : (
+        <GoogleAuthButton />
+      )}
     </main>
   );
 };

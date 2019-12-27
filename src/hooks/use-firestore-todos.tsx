@@ -11,7 +11,7 @@ export const todosCollection = (uid: string) =>
     .doc(uid)
     .collection(`todos`);
 
-export const useFirebaseTodos = (uid: string) => {
+export const useFirestoreTodos = (uid: string) => {
   const [todos, setTodos] = useState<Todo[]>();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>();
@@ -88,4 +88,4 @@ export const useFirebaseTodos = (uid: string) => {
   return { todos, loading, error, addTodo, updateTodo, deleteTodo };
 };
 
-export default useFirebaseTodos;
+export default useFirestoreTodos;
