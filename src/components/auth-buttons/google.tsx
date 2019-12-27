@@ -18,6 +18,8 @@ const GoogleAuthButton: React.FCX = ({ className }) => {
   );
 };
 
-export const StyledGoogleAuthButton = styled(GoogleAuthButton)``;
+export const StyledGoogleAuthButton = styled(GoogleAuthButton)`
+  border: solid 1px #000;
+`;
 
 export default StyledGoogleAuthButton;

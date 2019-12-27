@@ -1,14 +1,56 @@
 import React, { useRef } from 'react';
 import { useFirestoreTodos } from 'src/hooks';
 import { FirebaseAuthContainer } from 'src/store';
+import { Todo } from 'types/models';
 
 import styled from '@emotion/styled';
 
-export const TodoContents: React.FCX = ({ className }) => {
+type Props = {
+  todo: Todo;
+  key: number;
+};
+
+const TodoItem: React.FCX<Props> = ({ className, todo, key }) => {
+  const { user } = FirebaseAuthContainer.useContainer();
+  if (!user) return <></>;
+  const { id, text, completed } = todo;
+  const { updateTodo, deleteTodo } = useFirestoreTodos(user.uid);
+
+  const handleUpdate = async () => {
+    await updateTodo(user.uid, id, !completed);
+  };
+
+  const handleDelete = async () => {
+    await deleteTodo(user.uid, id);
+  };
+
+  return (
+    <ul key={key} className={className}>
+      <li>{id}</li>
+      <li>{text}</li>
+      <li>
+        <button onClick={handleUpdate}>
+          {completed ? 'complete' : 'return to incomplete'}
+        </button>
+      </li>
+      <li>
+        <button onClick={handleDelete}>delete</button>
+      </li>
+    </ul>
+  );
+};
+
+const StyledTodoItem = styled(TodoItem)`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  list-style: none;
+`;
+
+const TodoContents: React.FCX = ({ className }) => {
   const { user } = FirebaseAuthContainer.useContainer();
   if (!user) return <></>;
 
-  const { todos, loading, addTodo } = useFirestoreTodos(user.uid);
+  const { todos, addTodo } = useFirestoreTodos(user.uid);
   const ref = useRef<HTMLInputElement>(null);
 
   const onSubmit = async (e: React.SyntheticEvent<{}>) => {
@@ -25,26 +67,22 @@ export const TodoContents: React.FCX = ({ className }) => {
         <input type='text' ref={ref} />
         <button type='submit'>Add Todo</button>
       </form>
-      {loading ? (
-        <h1>now loading</h1>
+      {todos ? (
+        todos?.map((todo, i) => <StyledTodoItem todo={todo} key={i} />)
       ) : (
-        todos?.map(({ id, text, completed }, i) => (
-          <ul key={i}>
-            <li>{id}</li>
-            <li>{text}</li>
-            <li>{completed ? 'completed' : 'not completed'}</li>
-          </ul>
-        ))
+        <h1>now loading</h1>
       )}
     </section>
   );
 };
 
 export const StyledTodoContents = styled(TodoContents)`
-  ul {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    list-style: none;
+  padding: 2rem 0;
+  form {
+    padding: 2rem 0;
+    input {
+      background-color: green;
+    }
   }
 `;
 

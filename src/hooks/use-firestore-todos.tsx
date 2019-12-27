@@ -11,9 +11,25 @@ export const todosCollection = (uid: string) =>
     .doc(uid)
     .collection(`todos`);
 
+const toModel = (id: string, data: firebase.firestore.DocumentData) => {
+  const { text, completed } = data;
+  const createdAt = data.createdAt
+    ? data.createdAt.toDate().getTime()
+    : undefined;
+  const updatedAt = data.updatedAt
+    ? data.updatedAt.toDate().getTime()
+    : undefined;
+  return {
+    id,
+    text,
+    completed,
+    createdAt,
+    updatedAt
+  };
+};
+
 export const useFirestoreTodos = (uid: string) => {
   const [todos, setTodos] = useState<Todo[]>();
-  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>();
 
   useEffect(() => {
@@ -24,23 +40,14 @@ export const useFirestoreTodos = (uid: string) => {
       `desc`
     );
 
-    (async () => {
-      setLoading(true);
-      try {
-        const snap = await query.get();
-        const todosData: Todo[] = snap.docs.map(doc => ({
-          ...(doc.data() as Todo),
-          id: doc.id
-        }));
-        console.log(todosData);
-        setTodos(todosData);
-        setError(null);
-      } catch (err) {
-        setError(err);
-        console.error(err);
-      }
-      setLoading(false);
-    })();
+    const unsubscribe = query.onSnapshot(snapshot => {
+      const todos = snapshot.docs.map(doc => toModel(doc.id, doc.data()));
+      setTodos(todos);
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const addTodo = async (uid: string, todoName: string) => {
@@ -54,8 +61,13 @@ export const useFirestoreTodos = (uid: string) => {
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       })
       .catch(error => {
+        setError(error);
         console.error('Error add todo to Firebase Database', error);
       });
+
+    const newTodos = todos?.filter(({ id }) => id !== todoName);
+    setTodos(newTodos);
+
     return;
   };
 
@@ -71,6 +83,7 @@ export const useFirestoreTodos = (uid: string) => {
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       })
       .catch(error => {
+        setError(error);
         console.error('Error update todo to Firebase Database', error);
       });
     return;
@@ -86,7 +99,7 @@ export const useFirestoreTodos = (uid: string) => {
     return;
   };
 
-  return { todos, loading, error, addTodo, updateTodo, deleteTodo };
+  return { todos, error, addTodo, updateTodo, deleteTodo };
 };
 
 export default useFirestoreTodos;
