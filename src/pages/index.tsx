@@ -15,7 +15,7 @@ const Index: React.FCX = ({ className }) => {
       <h1>this is index page!</h1>
       {user ? (
         <>
-          <TodoContents user={user} />
+          <TodoContents />
           <SignOutButton />
         </>
       ) : (
