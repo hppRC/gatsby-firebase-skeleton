@@ -1,8 +1,8 @@
+import firebase from 'firebase/app';
 import { WrapRootElement, WrapPageElement } from 'src/components';
+
 export const wrapRootElement = WrapRootElement;
 export const wrapPageElement = WrapPageElement;
-
-import firebase from 'firebase/app';
 
 export const onClientEntry = () => {
   firebase.initializeApp({
