@@ -8,13 +8,24 @@ import styled from '@emotion/styled';
 type Props = {
   todo: Todo;
   key: number;
+  updateTodo: (
+    uid: string,
+    todoId: string,
+    completed: boolean
+  ) => Promise<void>;
+  deleteTodo: (uid: string, todoId: string) => Promise<void>;
 };
 
-const TodoItem: React.FCX<Props> = ({ className, todo, key }) => {
+const TodoItem: React.FCX<Props> = ({
+  className,
+  todo,
+  updateTodo,
+  deleteTodo,
+  key
+}) => {
   const { user } = FirebaseAuthContainer.useContainer();
   if (!user) return <></>;
   const { id, text, completed } = todo;
-  const { updateTodo, deleteTodo } = useFirestoreTodos(user.uid);
 
   const handleUpdate = async () => {
     await updateTodo(user.uid, id, !completed);
@@ -50,7 +61,9 @@ const TodoContents: React.FCX = ({ className }) => {
   const { user } = FirebaseAuthContainer.useContainer();
   if (!user) return <></>;
 
-  const { todos, addTodo } = useFirestoreTodos(user.uid);
+  const { todos, addTodo, updateTodo, deleteTodo } = useFirestoreTodos(
+    user.uid
+  );
   const ref = useRef<HTMLInputElement>(null);
 
   const onSubmit = async (e: React.SyntheticEvent<{}>) => {
@@ -68,7 +81,14 @@ const TodoContents: React.FCX = ({ className }) => {
         <button type='submit'>Add Todo</button>
       </form>
       {todos ? (
-        todos?.map((todo, i) => <StyledTodoItem todo={todo} key={i} />)
+        todos?.map((todo, i) => (
+          <StyledTodoItem
+            todo={todo}
+            key={i}
+            updateTodo={updateTodo}
+            deleteTodo={deleteTodo}
+          />
+        ))
       ) : (
         <h1>now loading</h1>
       )}

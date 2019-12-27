@@ -42,6 +42,7 @@ export const useFirestoreTodos = (uid: string) => {
 
     const unsubscribe = query.onSnapshot(snapshot => {
       const todos = snapshot.docs.map(doc => toModel(doc.id, doc.data()));
+      console.log(todos);
       setTodos(todos);
     });
 
