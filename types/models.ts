@@ -7,3 +7,8 @@ export type Todo = {
   readonly createdAt?: firestore.Timestamp;
   readonly updatedAt?: firestore.Timestamp;
 };
+
+export type User = {
+  readonly uid: string;
+  readonly name: string;
+};

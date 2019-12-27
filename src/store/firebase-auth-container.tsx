@@ -2,12 +2,8 @@ import 'firebase/auth';
 
 import firebase from 'firebase/app';
 import { useEffect, useState } from 'react';
+import { User } from 'types/models';
 import { createContainer } from 'unstated-next';
-
-type User = {
-  readonly uid: string;
-  readonly name: string;
-};
 
 const useFirebaseAuthContainer = () => {
   const [user, setUser] = useState<User | null>();

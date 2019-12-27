@@ -11,7 +11,7 @@ export const todosCollection = (uid: string) =>
     .doc(uid)
     .collection(`todos`);
 
-export const useFirestoreTodos = (uid: string) => {
+export const useFirebaseTodos = (uid: string) => {
   const [todos, setTodos] = useState<Todo[]>();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>();
@@ -19,7 +19,7 @@ export const useFirestoreTodos = (uid: string) => {
   useEffect(() => {
     const collection = todosCollection(uid);
 
-    let query: firebase.firestore.Query = collection.orderBy(
+    const query: firebase.firestore.Query = collection.orderBy(
       `createdAt`,
       `desc`
     );
@@ -88,4 +88,4 @@ export const useFirestoreTodos = (uid: string) => {
   return { todos, loading, error, addTodo, updateTodo, deleteTodo };
 };
 
-export default useFirestoreTodos;
+export default useFirebaseTodos;
